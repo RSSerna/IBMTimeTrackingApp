@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:time_tracker/models/task.dart';
 
 class AddTaskDialog extends StatefulWidget {
+  const AddTaskDialog({super.key, required this.onAdd, this.task});
   final Function(Task) onAdd;
-
-  const AddTaskDialog({super.key, required this.onAdd});
+  final Task? task;
 
   @override
   AddTaskDialogState createState() => AddTaskDialogState();
@@ -12,6 +12,14 @@ class AddTaskDialog extends StatefulWidget {
 
 class AddTaskDialogState extends State<AddTaskDialog> {
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.task != null) {
+      _controller.text = widget.task!.name;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +39,9 @@ class AddTaskDialogState extends State<AddTaskDialog> {
         TextButton(
           child: const Text('Add'),
           onPressed: () {
-            var newTask =
-                Task(id: DateTime.now().toString(), name: _controller.text);
+            var newTask = Task(
+                id: widget.task?.id ?? DateTime.now().toString(),
+                name: _controller.text);
             widget.onAdd(newTask);
           },
         ),

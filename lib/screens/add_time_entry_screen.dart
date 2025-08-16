@@ -4,7 +4,8 @@ import 'package:time_tracker/models/time_entry.dart';
 import 'package:time_tracker/provider/time_entry_provider.dart';
 
 class AddTimeEntryScreen extends StatefulWidget {
-  const AddTimeEntryScreen({super.key});
+  const AddTimeEntryScreen({super.key, this.timeEntry});
+  final TimeEntry? timeEntry;
 
   @override
   AddTimeEntryScreenState createState() => AddTimeEntryScreenState();
@@ -16,6 +17,19 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
   String taskId = 'Task 1';
   double totalTime = 0.0;
   String notes = '';
+  DateTime selectedDate = DateTime.now();
+
+  @override
+  void initState() {
+    if (widget.timeEntry != null) {
+      projectId = widget.timeEntry!.projectId;
+      taskId = widget.timeEntry!.taskId;
+      totalTime = widget.timeEntry!.totalTime;
+      notes = widget.timeEntry!.notes;
+      selectedDate = widget.timeEntry!.date;
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,6 +80,33 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                     );
                   }).toList(),
                 ),
+                SizedBox(height: 16),
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Date: 	${selectedDate.toLocal().toString().split(' ')[0]}',
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (picked != null && picked != selectedDate) {
+                          setState(() {
+                            selectedDate = picked;
+                          });
+                        }
+                      },
+                      child: Text('Select Date'),
+                    ),
+                  ],
+                ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Total Time (hours)'),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
@@ -95,7 +136,7 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                     if (_formKey.currentState!.validate()) {
                       _formKey.currentState!.save();
                       Provider.of<TimeEntryProvider>(context, listen: false)
-                          .addTimeEntry(TimeEntry(
+                          .addOrUpdateEntry(TimeEntry(
                         id: DateTime.now().toString(), // Simple ID generation
                         projectId: projectId,
                         taskId: taskId,

@@ -23,13 +23,13 @@ class TaskManagementScreen extends StatelessWidget {
               final tag = provider.task[index];
               return ListTile(
                 title: Text(tag.name),
-                // leading: IconButton(
-                //   icon: const Icon(Icons.edit, color: Colors.red),
-                //   onPressed: () {
-                //     // Delete the tag
-                //     provider.deleteTask(tag.id);
-                //   },
-                // ),
+                leading: IconButton(
+                  icon: const Icon(Icons.edit, color: Colors.blue),
+                  onPressed: () {
+                    // Edit
+                    provider.addOrUpdateTask(tag);
+                  },
+                ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete, color: Colors.red),
                   onPressed: () {

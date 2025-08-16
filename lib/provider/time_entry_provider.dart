@@ -11,7 +11,7 @@ class TimeEntryProvider with ChangeNotifier {
 
   List<Project> _projects = [];
   List<Task> _tasks = [];
-  final List<TimeEntry> _entries = [];
+  List<TimeEntry> _entries = [];
 
   List<TimeEntry> get entries => _entries;
   List<Project> get projects => _projects;
@@ -25,6 +25,7 @@ class TimeEntryProvider with ChangeNotifier {
     // Load projects and entries from a data source or initialize them
     _loadProjects();
     _loadTasks();
+    _loadEntries();
     notifyListeners();
   }
 
@@ -91,6 +92,8 @@ class TimeEntryProvider with ChangeNotifier {
 
   // Save projects to local storage
   void _saveProjectsToStorage() {
+    var jsonProjects = _projects.map((e) => e.toJson()).toList();
+    print('Saving projects to storage: $jsonProjects');
     storage.setItem(
         'projects', jsonEncode(_projects.map((e) => e.toJson()).toList()));
   }
@@ -115,28 +118,41 @@ class TimeEntryProvider with ChangeNotifier {
     _saveProjectsToStorage(); // Save the updated list to local storage
     notifyListeners();
   }
-  // TIME ENTRIES
-  // void _loadEntries() {
-  //   var storedEntries = storage.getItem('entries');
-  //   if (storedEntries != null) {
-  //     _entries = List<TimeEntry>.from(
-  //       (storedEntries as List).map((item) => TimeEntry.fromJson(item)),
-  //     );
-  //   } else {
-  //     // Initialize with default entries if none are stored
-  //     _entries = [
-  //       TimeEntry(id: '1', projectId: '1', taskId: '1', totalTime: 2.0, notes: 'Initial entry'),
-  //     ];
-  //   }
-  // }
 
-  void addTimeEntry(TimeEntry entry) {
-    _entries.add(entry);
+  // TIME ENTRIES
+  void _loadEntries() {
+    var storedEntries = storage.getItem('entries');
+    if (storedEntries != null) {
+      _entries = List<TimeEntry>.from(
+        (storedEntries as List).map((item) => TimeEntry.fromJson(item)),
+      );
+    }
+  }
+
+  // Save projects to local storage
+  void _saveEntriesToStorage() {
+    storage.setItem(
+        'entries', jsonEncode(_entries.map((e) => e.toJson()).toList()));
+  }
+
+  // Add or update a entry
+  void addOrUpdateEntry(TimeEntry entry) {
+    int index = _entries.indexWhere((e) => e.id == entry.id);
+    if (index != -1) {
+      // Update existing entry
+      _entries[index] = entry;
+    } else {
+      // Add new entry
+      _entries.add(entry);
+    }
+    _saveEntriesToStorage(); // Save the updated list to local storage
     notifyListeners();
   }
 
-  void deleteTimeEntry(String id) {
+  // Delete a time entry
+  void deleteEntry(String id) {
     _entries.removeWhere((entry) => entry.id == id);
+    _saveEntriesToStorage(); // Save the updated list to local storage
     notifyListeners();
   }
 }

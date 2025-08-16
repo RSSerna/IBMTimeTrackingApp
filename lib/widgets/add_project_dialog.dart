@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:time_tracker/models/project.dart';
-import 'package:time_tracker/provider/time_entry_provider.dart';
 
 class AddProjectDialog extends StatefulWidget {
   const AddProjectDialog({
     super.key,
     required this.onAdd,
+    this.project,
   });
 
   final Function(Project) onAdd;
+  final Project? project;
+
   @override
   State<AddProjectDialog> createState() => _AddProjectDialogState();
 }
 
 class _AddProjectDialogState extends State<AddProjectDialog> {
   final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    if (widget.project != null) {
+      _controller.text = widget.project!.name;
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -34,12 +44,11 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
         TextButton(
           onPressed: () {
             final project = Project(
-              id: DateTime.now().millisecondsSinceEpoch.toString(),
+              id: widget.project?.id ??
+                  DateTime.now().millisecondsSinceEpoch.toString(),
               name: _controller.text,
             );
-            Provider.of<TimeEntryProvider>(context, listen: false)
-                .addOrUpdateProject(project);
-            Navigator.pop(context);
+            widget.onAdd(project);
           },
           child: const Text('Add'),
         ),

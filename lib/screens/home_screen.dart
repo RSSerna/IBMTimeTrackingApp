@@ -108,7 +108,7 @@ class HomeScreenState extends State<HomeScreen>
               key: Key(entry.id),
               direction: DismissDirection.endToStart,
               onDismissed: (direction) {
-                provider.deleteTimeEntry(entry.id);
+                provider.deleteEntry(entry.id);
               },
               background: Container(
                 color: Colors.red,
@@ -121,10 +121,32 @@ class HomeScreenState extends State<HomeScreen>
                 margin:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
                 child: ListTile(
-                  title: Text('${entry.projectId} - ${entry.totalTime} hours'),
-                  subtitle:
+                  title: Text(
+                    '${entry.projectId} - ${entry.taskId}',
+                    style: TextStyle(color: Colors.teal, fontSize: 20),
+                  ),
+                  subtitle: Column(
+                    children: [
                       Text('${entry.date.toString()} - Notes: ${entry.notes}'),
+                      // Text('${entry.date.toString()} - Notes: ${entry.notes}'),
+                      // Text('${entry.date.toString()} - Notes: ${entry.notes}'),
+                    ],
+                  ),
                   isThreeLine: true,
+                  leading: const Icon(Icons.access_time, color: Colors.green),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.edit, color: Colors.blue),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => AddTimeEntryScreen(
+                            timeEntry: entry,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             );
