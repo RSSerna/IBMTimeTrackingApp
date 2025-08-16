@@ -27,6 +27,11 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
       totalTime = widget.timeEntry!.totalTime;
       notes = widget.timeEntry!.notes;
       selectedDate = widget.timeEntry!.date;
+    } else {
+      var provider = Provider.of<TimeEntryProvider>(context, listen: false);
+      projectId =
+          provider.projects.isNotEmpty ? provider.projects[0].name : projectId;
+      taskId = provider.task.isNotEmpty ? provider.task[0].name : taskId;
     }
     super.initState();
   }
@@ -42,8 +47,6 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
       body: Consumer<TimeEntryProvider>(builder: (context, provider, child) {
         var projects = provider.projects;
         var tasks = provider.task;
-        projectId = projects.isNotEmpty ? projects[0].name : projectId;
-        taskId = projects.isNotEmpty ? tasks[0].name : taskId;
         return Padding(
           padding: const EdgeInsets.all(8.0),
           child: Form(
@@ -108,6 +111,7 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                   ],
                 ),
                 TextFormField(
+                  controller: TextEditingController(text: totalTime.toString()),
                   decoration: InputDecoration(labelText: 'Total Time (hours)'),
                   keyboardType: TextInputType.numberWithOptions(decimal: true),
                   validator: (value) {
@@ -119,9 +123,10 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                     }
                     return null;
                   },
-                  onSaved: (value) => totalTime = double.parse(value!),
+                  onChanged: (value) => totalTime = double.parse(value),
                 ),
                 TextFormField(
+                  controller: TextEditingController(text: notes),
                   decoration: InputDecoration(labelText: 'Notes'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -129,7 +134,7 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                     }
                     return null;
                   },
-                  onSaved: (value) => notes = value!,
+                  onChanged: (value) => notes = value,
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -137,7 +142,7 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                       _formKey.currentState!.save();
                       Provider.of<TimeEntryProvider>(context, listen: false)
                           .addOrUpdateEntry(TimeEntry(
-                        id: DateTime.now().toString(), // Simple ID generation
+                        id: widget.timeEntry?.id ?? DateTime.now().toString(),
                         projectId: projectId,
                         taskId: taskId,
                         totalTime: totalTime,
