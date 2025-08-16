@@ -34,7 +34,7 @@ class TimeEntryProvider with ChangeNotifier {
     var storedTasks = storage.getItem('tasks');
     if (storedTasks != null) {
       _tasks = List<Task>.from(
-        (storedTasks as List).map((item) => Task.fromJson(item)),
+        (jsonDecode(storedTasks) as List).map((item) => Task.fromJson(item)),
       );
     } else {
       // Initialize with default projects if none are stored
@@ -78,7 +78,8 @@ class TimeEntryProvider with ChangeNotifier {
     var storedProjects = storage.getItem('projects');
     if (storedProjects != null) {
       _projects = List<Project>.from(
-        (storedProjects as List).map((item) => Project.fromJson(item)),
+        (jsonDecode(storedProjects) as List)
+            .map((item) => Project.fromJson(item)),
       );
     } else {
       // Initialize with default projects if none are stored
@@ -124,7 +125,8 @@ class TimeEntryProvider with ChangeNotifier {
     var storedEntries = storage.getItem('entries');
     if (storedEntries != null) {
       _entries = List<TimeEntry>.from(
-        (storedEntries as List).map((item) => TimeEntry.fromJson(item)),
+        (jsonDecode(storedEntries) as List)
+            .map((item) => TimeEntry.fromJson(item)),
       );
     }
   }

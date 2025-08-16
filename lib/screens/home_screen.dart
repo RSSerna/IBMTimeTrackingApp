@@ -126,26 +126,32 @@ class HomeScreenState extends State<HomeScreen>
                     style: TextStyle(color: Colors.teal, fontSize: 20),
                   ),
                   subtitle: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${entry.date.toString()} - Notes: ${entry.notes}'),
-                      // Text('${entry.date.toString()} - Notes: ${entry.notes}'),
-                      // Text('${entry.date.toString()} - Notes: ${entry.notes}'),
+                      Text('Total Time: ${entry.totalTime} hours'),
+                      Text(
+                          'Date ${entry.date.toLocal().toString().split(' ')[0]}'),
+                      Text('Notes: ${entry.notes}'),
                     ],
                   ),
-                  isThreeLine: true,
-                  leading: const Icon(Icons.access_time, color: Colors.green),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.blue),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => AddTimeEntryScreen(
-                            timeEntry: entry,
-                          ),
-                        ),
-                      );
-                    },
+                  // isThreeLine: true,
+                  trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.blue),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddTimeEntryScreen(
+                                timeEntry: entry,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
