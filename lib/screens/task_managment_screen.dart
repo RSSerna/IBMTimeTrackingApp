@@ -12,7 +12,7 @@ class TaskManagementScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text("Manage Tasks"),
         backgroundColor:
-            Colors.deepPurple, // Themed color similar to your inspirations
+            Colors.teal, // Themed color similar to your inspirations
         foregroundColor: Colors.white,
       ),
       body: Consumer<TimeEntryProvider>(

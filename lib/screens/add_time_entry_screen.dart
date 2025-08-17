@@ -123,7 +123,11 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                     }
                     return null;
                   },
-                  onChanged: (value) => totalTime = double.parse(value),
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      totalTime = double.parse(value);
+                    }
+                  },
                 ),
                 TextFormField(
                   controller: TextEditingController(text: notes),
@@ -136,6 +140,7 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                   },
                   onChanged: (value) => notes = value,
                 ),
+                SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {

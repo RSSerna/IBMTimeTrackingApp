@@ -79,7 +79,7 @@ class HomeScreenState extends State<HomeScreen>
         controller: _tabController,
         children: [
           buildAllEntries(context),
-          buildExpensesByCategory(context),
+          buildEntriesByProjects(context),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -162,7 +162,7 @@ class HomeScreenState extends State<HomeScreen>
     );
   }
 
-  Widget buildExpensesByCategory(BuildContext context) {
+  Widget buildEntriesByProjects(BuildContext context) {
     return Consumer<TimeEntryProvider>(
       builder: (context, provider, child) {
         if (provider.entries.isEmpty) {
@@ -171,9 +171,10 @@ class HomeScreenState extends State<HomeScreen>
 
         // Grouping expenses by category
         var grouped = groupBy(provider.entries, (TimeEntry e) => e.projectId);
+        print("grouped: $grouped");
         return ListView(
           children: grouped.entries.map((entry) {
-            String projectName = getProjectNameById(context, entry.key);
+            String projectName = entry.key;
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
@@ -197,8 +198,6 @@ class HomeScreenState extends State<HomeScreen>
                   itemBuilder: (context, index) {
                     TimeEntry timeEntry = entry.value[index];
                     return ListTile(
-                      leading: const Icon(Icons.monetization_on,
-                          color: Colors.green),
                       title: Text(
                           "${timeEntry.taskId} - ${timeEntry.totalTime} hours"),
                       subtitle: Text(
@@ -212,14 +211,6 @@ class HomeScreenState extends State<HomeScreen>
         );
       },
     );
-  }
-
-  // home_screen.dart
-  String getProjectNameById(BuildContext context, String projectId) {
-    var project = Provider.of<TimeEntryProvider>(context, listen: false)
-        .projects
-        .firstWhere((project) => project.id == projectId);
-    return project.name;
   }
 }
 

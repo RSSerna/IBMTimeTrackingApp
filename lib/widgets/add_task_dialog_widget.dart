@@ -24,11 +24,11 @@ class AddTaskDialogState extends State<AddTaskDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add New Tag'),
+      title: Text(widget.task != null ? 'Update Task' : 'Add Task'),
       content: TextField(
         controller: _controller,
         decoration: const InputDecoration(
-          labelText: 'Tag Name',
+          labelText: 'Task Name',
         ),
       ),
       actions: [

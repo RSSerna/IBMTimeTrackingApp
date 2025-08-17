@@ -29,10 +29,10 @@ class _AddProjectDialogState extends State<AddProjectDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add Category'),
+      title: Text(widget.project != null ? 'Update Project' : 'Add Project'),
       content: TextField(
         controller: _controller,
-        decoration: const InputDecoration(labelText: 'Category Name'),
+        decoration: const InputDecoration(labelText: 'Project Name'),
       ),
       actions: <Widget>[
         TextButton(

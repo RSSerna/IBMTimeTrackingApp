@@ -12,6 +12,7 @@ class ProjectsManagementScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Manage Projects'),
+        backgroundColor: Colors.teal,
       ),
       body: Consumer<TimeEntryProvider>(
         builder: (context, provider, child) {
