@@ -48,10 +48,11 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
         var projects = provider.projects;
         var tasks = provider.task;
         return Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
+              spacing: 8,
               children: <Widget>[
                 DropdownButtonFormField<String>(
                   value: projectId,
@@ -83,7 +84,6 @@ class AddTimeEntryScreenState extends State<AddTimeEntryScreen> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height: 16),
                 Row(
                   children: [
                     Expanded(
